@@ -1,0 +1,76 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'todo-list-api
+
+  Sample SAM Template for todo-list-api
+
+  '
+Globals:
+  Function:
+    Timeout: 5
+Resources:
+  DeleteTodoFunction:
+    Properties:
+      CodeUri: s3://xcvjalksdfjasies/64eea4417e8278fed47f97d6d705a15e
+      Events:
+        CatchAll:
+          Properties:
+            Method: DELETE
+            Path: /todo
+          Type: Api
+      Handler: delete-todo-handler
+      Runtime: go1.x
+      Tracing: Active
+    Type: AWS::Serverless::Function
+  GetTodoFunction:
+    Properties:
+      CodeUri: s3://xcvjalksdfjasies/64eea4417e8278fed47f97d6d705a15e
+      Events:
+        CatchAll:
+          Properties:
+            Method: GET
+            Path: /todo
+          Type: Api
+      Handler: get-todo-handler
+      Runtime: go1.x
+      Tracing: Active
+    Type: AWS::Serverless::Function
+  PostTodoFunction:
+    Properties:
+      CodeUri: s3://xcvjalksdfjasies/64eea4417e8278fed47f97d6d705a15e
+      Events:
+        CatchAll:
+          Properties:
+            Method: POST
+            Path: /todo
+          Type: Api
+      Handler: post-todo-handler
+      Runtime: go1.x
+      Tracing: Active
+    Type: AWS::Serverless::Function
+  PutTodoFunction:
+    Properties:
+      CodeUri: s3://xcvjalksdfjasies/64eea4417e8278fed47f97d6d705a15e
+      Events:
+        CatchAll:
+          Properties:
+            Method: PUT
+            Path: /todo
+          Type: Api
+      Handler: put-todo-handler
+      Runtime: go1.x
+      Tracing: Active
+    Type: AWS::Serverless::Function
+  TodoTable:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: TID
+        AttributeType: S
+      KeySchema:
+      - AttributeName: TID
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+    Type: AWS::DynamoDB::Table
+Transform: AWS::Serverless-2016-10-31

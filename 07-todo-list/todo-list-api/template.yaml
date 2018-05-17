@@ -13,8 +13,8 @@ Resources:
   GetTodoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./todos.zip
-      Handler: get-todo
+      CodeUri: ./todo-list.zip
+      Handler: get-todo-handler
       Runtime: go1.x
       Tracing: Active
       Events:
@@ -27,8 +27,8 @@ Resources:
   PostTodoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./todos.zip
-      Handler: post-todo
+      CodeUri: ./todo-list.zip
+      Handler: post-todo-handler
       Runtime: go1.x
       Tracing: Active
       Events:
@@ -41,8 +41,8 @@ Resources:
   PutTodoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./todos.zip
-      Handler: put-todo
+      CodeUri: ./todo-list.zip
+      Handler: put-todo-handler
       Runtime: go1.x
       Tracing: Active
       Events:
@@ -55,8 +55,8 @@ Resources:
   DeleteTodoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./todos.zip
-      Handler: delete-todo
+      CodeUri: ./todo-list.zip
+      Handler: delete-todo-handler
       Runtime: go1.x
       Tracing: Active
       Events:
@@ -67,17 +67,15 @@ Resources:
             Method: DELETE
   
   TodoTable:
-    Type: AWS::DynamoDB::TodoTable
+    Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: todo
-          AttributeType: S
-        - AttributeName: complete
-          AttributeType: B
-        - AttributeName: id
+        - 
+          AttributeName: TID
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - 
+          AttributeName: TID
           KeyType: HASH
       ProvisionedThroughput:
           ReadCapacityUnits: 1

@@ -153,6 +153,8 @@ The previous YAML will handle ~85% of the aforementioned resources allocated. SA
 
 There is quite a lot in this space. 
 
+![Screenshot](./images/03-sam-local.png)
+
 The following instructions come from a SAM Initted function:
 
 ```bash
@@ -297,7 +299,22 @@ Head fake! We did this in `06-sam-deploy`.
 
 I started this at 10:08AM on 05/17/18.
 
+Checkout the directory `07-todo-list` for a complete:
+- [ ] api
+    - [x] launched
+    - [ ] logic
+    - [ ] qa
+- [ ] front-end
+    - [x] launched
+        - [x] s3
+        - [ ] cloudfront <!-- [https://medium.com/all-technology-feeds/launching-a-static-site-with-react-aws-cloudfront-180f7a623675](https://medium.com/all-technology-feeds/launching-a-static-site-with-react-aws-cloudfront-180f7a623675) -->
+    - [ ] scaffolded
+    - [ ] logic
 
+Known complications:
+- SAM CLI is rather new, so there are a few issues. For this presentation I used a version built from source.
+- Testing DynamoDB locally is challenging and not very representative of the actual production DynamoDB.
+- Debugging and logging serverless is still peculiar (but getting better).
 
 ## The Definitive Maxim of 05/17/18
 
