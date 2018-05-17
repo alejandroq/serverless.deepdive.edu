@@ -1,0 +1,32 @@
+# clone samdev source
+git clone https://github.com/alejandroq/aws-sam-cli.git
+
+# setup pyenv
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+export PATH="/Users/37860/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+# install proper python versions for samdev
+pyenv install 2.7.14
+pyenv install 3.6.4
+pyenv local 3.6.4 2.7.14
+
+# use virtualenv
+pyenv activate samcli27
+
+# initialize dependencies
+make init
+
+# verify success
+which samdev
+
+# run unit tests
+tox
+
+# free to use in-development cli
+samdev init -r nodejs8.10  -n helloworld-nodejs
+samdev init -r python3.6  -n helloworld-python
+samdev init -r java8  -n helloworld-java
+samdev init -r go -n helloworld-go
+sam init -r dotnet -n helloworld-cs

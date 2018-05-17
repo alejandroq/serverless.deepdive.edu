@@ -1,0 +1,32 @@
+#!/bin/bash
+# example: bash ./scripts/deploy epa-homeratingapp
+
+set -o errexit -o xtrace
+
+bucket=YOUR_S3_BUCKET
+# append additional regions for the onset of a multi-regional strategy
+regions=(
+  us-east-1
+)
+
+BUILD_DIR=build
+
+[ -d "$BUILD_DIR" ] && rm -rf "$BUILD_DIR"
+mkdir "$BUILD_DIR"
+
+zip -j "$BUILD_DIR"/templates.zip $(find src -name '*.yaml') merge
+
+for region in "${regions[@]}"
+do
+  aws s3api head-bucket --bucket "${bucket}-${region}" --region "$region" --profile "$1" ||
+    aws s3 mb "s3://${bucket}-${region}" --region "$region" --profile "$1"
+
+  aws s3 cp "$BUILD_DIR"/templates.zip "s3://${bucket}-${region}" --region "$region" --profile "$1"
+
+  for TEMPLATE in $(find src -name '*.yaml'); do 
+    aws s3 cp $TEMPLATE "s3://${bucket}-${region}"/$TEMPLATE \
+    --region "$region" \
+    --profile "$1"
+  done; 
+done
+rm -rf "$BUILD_DIR"

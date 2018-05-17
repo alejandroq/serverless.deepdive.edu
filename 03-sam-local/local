@@ -1,0 +1,13 @@
+# Usage: samdev local [OPTIONS] COMMAND [ARGS]...
+# 
+#   Run your Serverless application locally for quick development & testing
+# 
+# Options:
+#   --help  Show this message and exit.
+# 
+# Commands:
+#   generate-event  Generate an event
+#   invoke          Invokes a local Lambda function once
+#   start-api       Runs your APIs locally
+
+sam local start-api -t helloworld-go/template.yaml
