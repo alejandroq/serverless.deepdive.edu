@@ -305,7 +305,7 @@ Checkout the directory `07-todo-list` for a complete:
     - [ ] logic
     - [ ] qa
 - [ ] front-end
-    - [x] launched
+    - [x] launched [http://xcvjalksdfjasieswebsite.s3-website.us-east-1.amazonaws.com/](http://xcvjalksdfjasieswebsite.s3-website.us-east-1.amazonaws.com/)
         - [x] s3
         - [ ] cloudfront <!-- [https://medium.com/all-technology-feeds/launching-a-static-site-with-react-aws-cloudfront-180f7a623675](https://medium.com/all-technology-feeds/launching-a-static-site-with-react-aws-cloudfront-180f7a623675) -->
     - [ ] scaffolded
