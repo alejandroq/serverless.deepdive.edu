@@ -8,6 +8,7 @@
     - [What is FaaS?](#what-is-faas)
     - [Why use FaaS?](#why-use-faas)
     - [AWS Lambda Limitations](#aws-lambda-limitations)
+    - [Getting Started](#getting-started)
     - [Infrastructure as Code with CloudFormation](#infrastructure-as-code-with-cloudformation)
     - [What is SAM?](#what-is-sam)
     - [SAM Commands](#sam-commands)
@@ -16,6 +17,7 @@
         - [`package`](#package)
         - [`local`](#local)
         - [`deploy`](#deploy)
+    - [Putting it all Together from SAM Itself](#putting-it-all-together-from-sam-itself)
     - [APP: Hello World(s) APIs](#app--hello-worlds-apis)
     - [APP: Todo List PWA / API](#app--todo-list-pwa---api)
     - [The Definitive Maxim of 05/17/18](#the-definitive-maxim-of-05-17-18)
@@ -23,17 +25,18 @@
     - [Resources](#resources)
 
 ## Goal
-Demonstrate high value per unit effort inherent to serverless applications as it pertains to:
-- pay as you go
-- infrastructure as code
-- recouped maintanence overhead
+Demonstrate a high value per unit effort inherent to serverless applications as it pertains to:
+<!-- TODO section on pricing and Economies of Scale as it pertains to vendors -->
+- pay-as-you-go 
+- recouping overhead costs
+- recouping maintenance costs
+- automating infrastructure as code
 - enough automation to make Tesla jealous (everything is a CLI command)
 
 We will accomplish the aforementioned via the classic "Hello World" and "Todo List" applications.
 
 ## Requirements
-- Basic AWS Knowledge
-- Basic Cloud Knowledge
+- Basic AWS/Cloud Knowledge
 - Understand the concept of servers
 - Tool: Docker [https://www.docker.com/](https://www.docker.com/)
 - Tool: awscli [https://aws.amazon.com/cli/](https://aws.amazon.com/cli/)
@@ -43,11 +46,14 @@ We will accomplish the aforementioned via the classic "Hello World" and "Todo Li
 - What is FaaS?
 - Why use FaaS?
 - AWS Lambda Limitations
-- Lambda and API Gateway 
+<!-- TODO do this -->
+- Lambda and API Gateway  
+<!-- SECURITY BIT -->
 - Infrastructure as Code with CloudFormation
 - What is SAM? 
 - SAM Commands
 - APP: Hello World(s) APIs
+<!-- - Quality Assurance as you build out -->
 - APP: Todo List PWA / API
 - The Definitive Maxim of 05/17/18
 - Other Notable Serverless 
@@ -63,22 +69,18 @@ From Wikipedia:
 
 ## Why use FaaS? 
 
-While FaaS maintains a slim class of its own complexities (see AWS Lambda limitations below), it allows for a focus on code and less on maintaining infastructure (including OS patches, etc). Strategies for cycling servers and load balancing take a step back to API versioning strategies (which is no simpler in typical infrastructure) and the limitations below. 
+While FaaS maintains a slim class of its own complexities (see AWS Lambda limitations below), it allows for a focus on code and less on maintaining infrastructure (including OS patches, etc). Strategies for cycling servers and load balancing take a step back to API versioning strategies (which is no simpler in typical infrastructure) and the limitations below. 
 
 FaaS deltas Platform as a Service (PaaS) in that the latter requires always requires a running thread - even if it handles load balancing. FaaS, starting with AWS Lambda, are "on-demand" and metered per subsecond use. PaaS is closer to a more typical server setup, however it is hosted by a compensated entity. 
 
-Utilizing FaaS recoups costs via pay-as-you-go, reduced server maintanence, 'infinite' horizontal scaling and configurable vertical scaling. 
+Utilizing FaaS recoups costs via pay-as-you-go, reduced server maintenance, 'infinite' horizontal scaling and configurable vertical scaling. 
 
 Use cases: [https://aws.amazon.com/lambda/](https://aws.amazon.com/lambda/)
 
 We will be focusing on AWS Lambda from here on out.
 
 Lambda supports an array of languages including: 
-- NodeJS
-- Python
-- Java 8
-- C#
-- Go
+[ NodeJS, Python, Java 8, C#, Go ]
 
 ## AWS Lambda Limitations
 
@@ -93,43 +95,62 @@ tl;dr:
     - `/tmp` space for writing is limited to 512MB
     - Deployment package size (compressed .zip/.jar file): 50MB
 
-Lambdas lives and works in shared infrastructure somewhere. When a function is first called it is suseptible to an infamous **cold start**. To picture, when a user first calls your Java Lambda, your Java Lambda must warm up the JVM and then compute results for the requestee. Of course this results in atypical long request times. This occurs somewhat unpredictably (typically happening in the first few calls after a long gap in calls where it silently warms down). User behavior can be nonlinear, therefore concurrent executions of a Lambda in a pre-loaded state can cause multiple cold starts affecting numerous users response delivery times. There are strategies for this such as: keeping your function warm (with analytics you can determine best times to do so, etc: [https://hackernoon.com/im-afraid-you-re-thinking-about-aws-lambda-cold-starts-all-wrong-7d907f278a4f](https://hackernoon.com/im-afraid-you-re-thinking-about-aws-lambda-cold-starts-all-wrong-7d907f278a4f)). Considering Lambda's freetier allows for a one million free invocations, anything smaller than a midtier application should not be overly aversely affected by redundant calls to their service. FaaS in general are probably not a great solution if you require guarenteed razor sharp performance and are therefore latency intolerant, but then again you would not be using a garbage collected language either.  
+Lambdas live on a server as EC2 does. When a function is first called it is susceptible to a **cold start**. To picture, when a user first calls your Java Lambda, your Java Lambda must warm up the JVM and then compute results for the requestee. Of course this results in atypical long request times. This occurs somewhat unpredictably (typically happening in the first few calls after a long gap in calls where it silently warms down). User behavior can be nonlinear, therefore concurrent executions of a Lambda in a pre-loaded state can cause multiple cold starts affecting numerous users response delivery times. There are strategies for this such as: keeping your function warm (with analytics you can determine best times to do so, etc: [https://hackernoon.com/im-afraid-you-re-thinking-about-aws-lambda-cold-starts-all-wrong-7d907f278a4f](https://hackernoon.com/im-afraid-you-re-thinking-about-aws-lambda-cold-starts-all-wrong-7d907f278a4f)). Considering Lambda's free tier allows for a one million free invocations, anything smaller than a midtier application should not be adversely affected by redundant calls service invocations. 
+
+FaaS in general is probably a poor solution if your project has partition intolerance.
+
+## Getting Started
+
+You must create an S3 Bucket to stash either your CloudFormation templates or code (.zip|.jar) for your Lambdas. 
+
+```sh
+aws s3 mb s3://YOUR_BUCKET_NAME
+```
 
 ## Infrastructure as Code with CloudFormation
 
-As far as I know, most of what you need to accomplish via infrastructure can be executed in AWS CloudFormation (with the exception of ACM Certification and I am sure other things Andy S could corret me on). CloudFormation (CF) is used under the hood for Elastic Beanstalk and other services Andy S could likely correctly reference. CF declares infrastructure to AWS and AWS produces it to specification. It can be either in YAML or JSON. 
+<!-- todo visualize -->
+CloudFormation (CF) is an AWS service that consumes a declarative template (.json|.yaml) and orchestrates the production of the infrastructure declared. This service is used under the hood for Elastic Beanstalk and other peer services.
 
 An example CloudFormation project is found in `01-cloudformation`.
 
-*It is assumed you have the AWS CLI and have produced a S3 bucket to stash CF templates into*
+Barring details into the intricacies, the YAML documents live in the `src` directory and a shell script for CloudFormation template validation lives in the `tests` directory. The `deploy` shell script packages your validated `src` templates and syncs them into your S3 Bucket. These specific scripts require you pass in your local AWS Profile as an argument.
 
-Snippets and example templates:
+```sh
+# bash deploy <AWS_PROFILE>
+bash deploy testaccount
+```
+
+Snippets and example CloudFormation Templates from Amazon:
 - [https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/CHAP_TemplateQuickRef.html](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/CHAP_TemplateQuickRef.html)
 - [https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/sample-templates-services-us-west-2.html](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/sample-templates-services-us-west-2.html)
 
 ## What is SAM?
 
-The Serverless Application Model (SAM) is a pre-processor to CF characterized by the following header: 
+The Serverless Application Model (SAM) is a pre-processor to CF notarized by the following header within the YAML or JSON files: 
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 ```
 
+Templates with the `Transform` header are treated slightly different (as they are preprocessed) within the CloudFormation service allowing us to do much more in less. The SAMCLI takes advantage of this and abstracts additional complexity by provisioning boilerplate function applications, validation and deployment. 
+
 The AWS CLI's CloudFormation command requires a few steps to update a Lambda:
-- Upload code zip an S3 location contracted within the CF YAML (must meet URL structure advertised); unless using `aws cloudformation package`. 
-- Upload and run CF for any related updates. 
+- Upload code zip an S3 location contracted within the CF YAML (must meet URL structure advertised); if you use `aws cloudformation package` before hand, then your `CodeUri` pointed (.zip|.jar) will be uploaded into the S3 Bucket you provide as an argument.
+- Upload and run CloudFormation by S3 URL or CLI appropriately. 
 
-Native CF requires explicit versioning of a Lambda function (`latest`, etc). Some services such as CloudWatch assume `latest` version. <!-- thanks to Andy S -->
+<!-- TODO how does SAM handle versioning? -->
+Vanilla CloudFormation requires explicit versioning of a Lambda function (`latest`, etc). Some services such as CloudWatch assume `latest` version.
 
-Why use SAM when we have CF? For serverless applications, to accomodate a single Lambda function for request you would need the following resources seperately declared and properly configured:
+Why use SAM when we have CF? For serverless applications, to accommodate a single Lambda function request you would need at a minimum the following resources separately declared and properly configured:
 - AWS::IAM::Role
 - AWS::Lambda::Function
+- AWS::ApiGateway::RestApi
 - AWS::ApiGateway::Deployment
-- AWS::ApiGateway::RestApi + any Swagger configuration necessary for a route
-- Probably other things - these alone for RP are a few 1000 lines of YAML for ~10 services + some. 
+- AWS::OtherThings::ForSure
 
-In-contrast to the aforementioned in SAM:
+In-contrast to vanilla CloudFormation, SAM abstracts the development of the aforementioned resources whilst adding in a few additions such as X-Ray, CloudWatch and CodeDeploy. 
 ```yaml
 HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -138,6 +159,10 @@ HelloWorldFunction:
       Handler: hello-world
       Runtime: go1.x
       Tracing: Active # https://docs.aws.amazon.com/lambda/latest/dg/lambda-x-ray.html
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Canary10Percent10Minutes
+      MemorySize: 128
       Events:
         CatchAll:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -149,47 +174,9 @@ HelloWorldFunction:
           PARAM1: VALUE
 ```
 
-The previous YAML will handle ~85% of the aforementioned resources allocated. SAM will produce an API Gateway with the `/hello` route, a Lambda (code pointed to a local .zip) and optional event listeners / code deployment methods such as Canary, etc. 
+Conclusively, SAM will produce an API Gateway with the `/hello` route, a Lambda for said route and numerous other configurable options.
 
-There is quite a lot in this space. 
-
-![Screenshot](./images/03-sam-local.png)
-
-The following instructions come from a SAM Initted function:
-
-```bash
-aws s3 mb s3://BUCKET_NAME
-```
-
-Next, run the following command to package our Lambda function to S3:
-
-```bash
-sam package \
-    --template-file template.yaml \
-    --output-template-file packaged.yaml \
-    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
-```
-
-Next, the following command will create a Cloudformation Stack and deploy your SAM resources.
-
-```bash
-sam deploy \
-    --template-file packaged.yaml \
-    --stack-name helloworld-go \
-    --capabilities CAPABILITY_IAM
-```
-
-> **See [Serverless Application Model (SAM) HOWTO Guide](https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md) for more details in how to get started.**
-
-After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL:
-
-```bash
-aws cloudformation describe-stacks \
-    --stack-name helloworld-go \
-    --query 'Stacks[].Outputs'
-``` 
-
-End quote.
+![Screenshot](./images/02-sam-results.png)
 
 ## SAM Commands
 
@@ -208,12 +195,7 @@ End quote.
 > Initialize a serverless application with a SAM template, folder structure for your Lambda functions, connected to an event source such as APIs, S3 Buckets or DynamoDB Tables. This application includes everything you need to get started with serverless and eventually grow into a production scale application.
 > This command can initialize a boilerplate serverless app. If you want to create your own template as well as use a custom location please take a look at our official documentation.
 
-tl:dr; creates a boiler plate app with template.yaml, code and initial test framework. Can do so for the following languages:
-
-```text
--r, --runtime [go1.x|nodejs|python|python2.7|python3.6|go|nodejs4.3|nodejs6.10|java8|dotnetcore1.0|java|dotnetcore2.0|dotnetcore|dotnet|nodejs8.10]
-```
-
+tl;dr: creates a boiler plate function with a template.yaml, code and an initial test framework. 
 
 ### `validate`
 
@@ -274,7 +256,9 @@ You can host the API in a local Docker container pictured below:
 
 If you require advanced local networking between services, you can declare your API into specific Docker networks.
 
-If you require enviornmental variables, the option also exists via: `sam local start-api -t TEMPLATE -n env.json`
+If you require environmental variables, the option also exists via: `sam local start-api -t TEMPLATE -n env.json`.
+
+If you require integration testing, this could be a good place to do so locally. You can input an event.json and could test a possibly deterministic output. On the topic of testing, unit tests should still occur locally and functional testing against a browser running a client to your API. That is all I will comment on as per the rabbit hole of testing here. 
 
 ### `deploy`
 
@@ -291,6 +275,42 @@ Successfully created/updated stack - helloworld
 
 ![Screenshot](./images/06-deploy-2.png)
 
+## Putting it all Together from SAM Itself
+
+The following instructions come from a SAM `init`ted function boilerplate's README.md:
+
+>   ```bash
+    aws s3 mb s3://BUCKET_NAME
+    ```
+
+    Next, run the following command to package our Lambda function to S3:
+
+    ```bash
+    sam package \
+        --template-file template.yaml \
+        --output-template-file packaged.yaml \
+        --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
+    ```
+
+    Next, the following command will create a CloudFormation Stack and deploy your SAM resources.
+
+    ```bash
+    sam deploy \
+        --template-file packaged.yaml \
+        --stack-name helloworld-go \
+        --capabilities CAPABILITY_IAM
+    ```
+
+    > **See [Serverless Application Model (SAM) HOWTO Guide](https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md) for more details in how to get started.**
+
+    After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL:
+
+    ```bash
+    aws cloudformation describe-stacks \
+        --stack-name helloworld-go \
+        --query 'Stacks[].Outputs'
+    ``` 
+
 ## APP: Hello World(s) APIs
 
 Head fake! We did this in `06-sam-deploy`.
@@ -303,30 +323,40 @@ Checkout the directory `07-todo-list` for a complete:
 - [ ] api
     - [x] launched
     - [ ] logic
-    - [ ] qa
 - [ ] front-end
     - [x] launched [http://xcvjalksdfjasieswebsite.s3-website.us-east-1.amazonaws.com/](http://xcvjalksdfjasieswebsite.s3-website.us-east-1.amazonaws.com/)
         - [x] s3
         - [ ] cloudfront <!-- [https://medium.com/all-technology-feeds/launching-a-static-site-with-react-aws-cloudfront-180f7a623675](https://medium.com/all-technology-feeds/launching-a-static-site-with-react-aws-cloudfront-180f7a623675) -->
-    - [ ] scaffolded
     - [ ] logic
+    - [ ] connected
+
+Hot stopped for this presentation at 11:50AM on 5/17/18 and logged the aforementioned progress.
 
 Known complications:
-- SAM CLI is rather new, so there are a few issues. For this presentation I used a version built from source.
-- Testing DynamoDB locally is challenging and not very representative of the actual production DynamoDB.
-- Debugging and logging serverless is still peculiar (but getting better).
+- SAM CLI is rather new, so there are a few issues. For this presentation I used a version built from source (see `HISTORY` for commands)
+- Debugging and logging serverless is still peculiar (but getting better). Handled via CloudWatch and X-Ray in production. Locally a command can be passed to `sam local [OPTION]` to run your function in a Docker container that is open to popular debugging tools for the respective techonology in play.
+- Testing DynamoDB locally is challenging and not very representative of the actual production DynamoDB
 
 ## The Definitive Maxim of 05/17/18
 
 Everything is an event stream.
 
+I recommend you look up Pub/Sub models. Nothing new, but really incredible and finding itself everywhere from infrastructure to front-end applications. [https://www.amazon.com/o/asin/0321200683/ref=nosim/enterpriseint-20](https://www.amazon.com/o/asin/0321200683/ref=nosim/enterpriseint-20)
+
 ## Other Notable Serverless Options
-- CloudFront and S3 website serving at pennies. Costs = (2.3 cents / month) * GB + Traffic per Andy S. First GB of transfer/month is free. 
-- Lambda@Edge and CloudFront for webapp serving | compute @ edge locations
-- Greengrass
+- CodePipeline and CodeBuild
+    - Serverless CI/CD. No hosted Jenkins necessary.
+- CloudFront and S3 Website 
+    - $$$ = ( ( 2.3 cents / month ) * GB ) + Traffic *first GB of transfer/month is free tier*
+- CloudFront and Lambda@Edge
+    - Compute at edge and replicate a Web Application server at AWS Edge Locations. 
 - DynamoDB
-- IoT
-- etc.
+    - NoSQL Document DB
+    - An older product and therefore has the strangest pricing 
+    - Is very good and trusted for incredible workloads in the wild
+- IoT (just really cool)
+- Greengrass (still really cool)
+- A lot more and probably more as of this reading
 
 ## Resources
 - [https://github.com/awslabs/serverless-application-model](https://github.com/awslabs/serverless-application-model)
