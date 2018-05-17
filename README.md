@@ -18,6 +18,13 @@
         - [`local`](#local)
         - [`deploy`](#deploy)
     - [Putting it all Together from SAM Itself](#putting-it-all-together-from-sam-itself)
+    - [APP: Hello World(s) APIs](#app--hello-worlds-apis)
+    - [APP: Todo List PWA / API](#app--todo-list-pwa---api)
+    - [Pricing](#pricing)
+    - [Security](#security)
+    - [The Definitive Maxim of 05/17/18](#the-definitive-maxim-of-05-17-18)
+    - [Other Notable Serverless Options](#other-notable-serverless-options)
+    - [Resources](#resources)
 
 ## Goal
 Demonstrate a high value per unit effort inherent to serverless applications as it pertains to:
@@ -305,6 +312,7 @@ The following instructions come from a SAM `init`ted function boilerplate's READ
         --stack-name helloworld-go \
         --query 'Stacks[].Outputs'
     ``` 
+```
 
 ## APP: Hello World(s) APIs
 
