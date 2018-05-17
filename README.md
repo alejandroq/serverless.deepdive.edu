@@ -17,7 +17,8 @@
         - [`local`](#local)
         - [`deploy`](#deploy)
     - [APP: Hello World(s) APIs](#app--hello-worlds-apis)
-    - [Code as Infrastructure and Infrastructure as Code. Not a Rube Goldberg, but an Event Stream(s)](#code-as-infrastructure-and-infrastructure-as-code-not-a-rube-goldberg--but-an-event-streams)
+    - [APP: Todo List PWA / API](#app--todo-list-pwa---api)
+    - [The Definitive Maxim of 05/17/18](#the-definitive-maxim-of-05-17-18)
     - [Other Notable Serverless Options](#other-notable-serverless-options)
     - [Resources](#resources)
 
@@ -26,7 +27,7 @@ Demonstrate high value per unit effort inherent to serverless applications as it
 - pay as you go
 - infrastructure as code
 - recouped maintanence overhead
-- enough automation to make Tesla jealous
+- enough automation to make Tesla jealous (everything is a CLI command)
 
 We will accomplish the aforementioned via the classic "Hello World" and "Todo List" applications.
 
@@ -47,8 +48,8 @@ We will accomplish the aforementioned via the classic "Hello World" and "Todo Li
 - What is SAM? 
 - SAM Commands
 - APP: Hello World(s) APIs
-- Code as Infrastructure and Infrastructure as Code. Not a Rube Goldberg, but an Event Stream(s) 
 - APP: Todo List PWA / API
+- The Definitive Maxim of 05/17/18
 - Other Notable Serverless 
 - Alternative Products
 
@@ -271,6 +272,8 @@ You can host the API in a local Docker container pictured below:
 
 If you require advanced local networking between services, you can declare your API into specific Docker networks.
 
+If you require enviornmental variables, the option also exists via: `sam local start-api -t TEMPLATE -n env.json`
+
 ### `deploy`
 
 Deploy your packaged function. Have a Hello World in less than five minutes. 
@@ -288,9 +291,17 @@ Successfully created/updated stack - helloworld
 
 ## APP: Hello World(s) APIs
 
-We did this in `06-sam-deploy`.
+Head fake! We did this in `06-sam-deploy`.
 
-## Code as Infrastructure and Infrastructure as Code. Not a Rube Goldberg, but an Event Stream(s) 
+## APP: Todo List PWA / API
+
+I started this at 10:08AM on 05/17/18.
+
+
+
+## The Definitive Maxim of 05/17/18
+
+Everything is an event stream.
 
 ## Other Notable Serverless Options
 - CloudFront and S3 website serving at pennies. Costs = (2.3 cents / month) * GB + Traffic per Andy S. First GB of transfer/month is free. 

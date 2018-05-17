@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  todo-list-api
+  
+  Sample SAM Template for todo-list-api
+
+Globals:
+  Function:
+    Timeout: 5
+
+Resources:
+  GetTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./todos.zip
+      Handler: get-todo
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /todo
+            Method: GET
+  
+  PostTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./todos.zip
+      Handler: post-todo
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /todo
+            Method: POST
+  
+  PutTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./todos.zip
+      Handler: put-todo
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /todo
+            Method: PUT
+            
+  DeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./todos.zip
+      Handler: delete-todo
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /todo
+            Method: DELETE
+  
+  TodoTable:
+    Type: AWS::DynamoDB::TodoTable
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: todo
+          AttributeType: S
+        - AttributeName: complete
+          AttributeType: B
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
