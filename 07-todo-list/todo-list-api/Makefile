@@ -10,7 +10,8 @@ APPLICATION_NAME := todo-list
 all: deploy clean
 
 deps:
-	go get -u ./...
+	# using go dep installed via brew
+	dep ensure
 
 clean: 
 	rm -rf ./hello-world/hello-world
