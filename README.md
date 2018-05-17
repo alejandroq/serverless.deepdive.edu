@@ -12,11 +12,12 @@
     - [What is SAM?](#what-is-sam)
     - [SAM Commands](#sam-commands)
         - [`init`](#init)
+        - [`validate`](#validate)
         - [`package`](#package)
         - [`local`](#local)
-        - [`validate`](#validate)
-    - [Serverless Application Model CLI (SAM)](#serverless-application-model-cli-sam)
-    - [Putting it Together](#putting-it-together)
+        - [`deploy`](#deploy)
+    - [APP: Hello World(s) APIs](#app--hello-worlds-apis)
+    - [Code as Infrastructure and Infrastructure as Code. Not a Rube Goldberg, but an Event Stream(s)](#code-as-infrastructure-and-infrastructure-as-code-not-a-rube-goldberg--but-an-event-streams)
     - [Other Notable Serverless Options](#other-notable-serverless-options)
     - [Resources](#resources)
 
@@ -46,7 +47,7 @@ We will accomplish the aforementioned via the classic "Hello World" and "Todo Li
 - What is SAM? 
 - SAM Commands
 - APP: Hello World(s) APIs
-- Code as Infrastructure and Infrastructure as Code. Not a Rube Goldberg, but an Event Stream(s) <!-- list of options at imagination - especially with SAM -->
+- Code as Infrastructure and Infrastructure as Code. Not a Rube Goldberg, but an Event Stream(s) 
 - APP: Todo List PWA / API
 - Other Notable Serverless 
 - Alternative Products
@@ -210,6 +211,14 @@ tl:dr; creates a boiler plate app with template.yaml, code and initial test fram
 -r, --runtime [go1.x|nodejs|python|python2.7|python3.6|go|nodejs4.3|nodejs6.10|java8|dotnetcore1.0|java|dotnetcore2.0|dotnetcore|dotnet|nodejs8.10]
 ```
 
+
+### `validate`
+
+```sh
+$ sam validate
+template.yaml is a valid SAM Template
+```
+
 ### `package`
 
 ```yaml
@@ -262,21 +271,31 @@ You can host the API in a local Docker container pictured below:
 
 If you require advanced local networking between services, you can declare your API into specific Docker networks.
 
-### `validate`
+### `deploy`
+
+Deploy your packaged function. Have a Hello World in less than five minutes. 
 
 ```sh
-$ sam validate
-template.yaml is a valid SAM Template
+$ samdev deploy --template-file helloworld-go/build.output.yaml --stack-name helloworld --capabilities CAPABILITY_IAM --profile testaccount --region us-east-1
+Waiting for changeset to be created..
+Waiting for stack create/update to complete
+Successfully created/updated stack - helloworld
 ```
 
-## Serverless Application Model CLI (SAM)
+![Screenshot](./images/06-deploy-1.png)
 
-## Putting it Together
+![Screenshot](./images/06-deploy-2.png)
+
+## APP: Hello World(s) APIs
+
+We did this in `06-sam-deploy`.
+
+## Code as Infrastructure and Infrastructure as Code. Not a Rube Goldberg, but an Event Stream(s) 
 
 ## Other Notable Serverless Options
-- CloudFront and S3 website serving
-- Lambda@Edge and CloudFront for webapp serving
-- Greengrass 
+- CloudFront and S3 website serving at pennies. Costs = (2.3 cents / month) * GB + Traffic per Andy S. First GB of transfer/month is free. 
+- Lambda@Edge and CloudFront for webapp serving | compute @ edge locations
+- Greengrass
 - DynamoDB
 - IoT
 - etc.

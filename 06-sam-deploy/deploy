@@ -1,0 +1,9 @@
+# Usage: samdev deploy [OPTIONS] [ARGS]...
+# 
+# Options:
+#   --debug  Turn on debug logging
+#   --help   Show this message and exit.
+
+# NOTE: this step occurs POST PACKAGE. 
+
+sam deploy --template-file helloworld-go/build.output.yaml --stack-name helloworld --capabilities CAPABILITY_IAM --profile <AWS_CLI_PROFILE> --region <AWS_REGION>
