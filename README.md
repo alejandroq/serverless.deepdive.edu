@@ -340,6 +340,7 @@ Known complications:
 ## Pricing
 under construction
 
+Lambda (note: API Gateway not included in this)
 ![Screenshot](./images/xx-price-2.png)
 
 ![Screenshot](./images/xx-price-1.png)
