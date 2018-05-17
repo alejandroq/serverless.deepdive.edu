@@ -48,14 +48,11 @@ We will accomplish the aforementioned via the classic "Hello World" and "Todo Li
 - What is FaaS?
 - Why use FaaS?
 - AWS Lambda Limitations
-<!-- TODO do this -->
 - Lambda and API Gateway  
-<!-- SECURITY BIT -->
 - Infrastructure as Code with CloudFormation
 - What is SAM? 
 - SAM Commands
 - APP: Hello World(s) APIs
-<!-- - Quality Assurance as you build out -->
 - APP: Todo List PWA / API
 - The Definitive Maxim of 05/17/18
 - Other Notable Serverless 
@@ -342,8 +339,16 @@ Known complications:
 
 ## Pricing
 under construction
+
+![Screenshot](./images/xx-price-2.png)
+
+![Screenshot](./images/xx-price-1.png)
+
 ## Security
-under construction
+- API Gateway has optional settings for token requirements, etc to faciliate requests
+- SAM abstracts this, but typically API Gateway must be given permission to run a specific Lambda Resource
+- The Lambda must be given explicit permissions to interact with other services such as RDS with Resource-based Authorizations
+- The Lambda invokation authorization can be enforced via IAM Policies, Resource-based Authorizations and Role-based Authorizations
 
 ## The Definitive Maxim of 05/17/18
 
