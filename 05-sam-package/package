@@ -1,0 +1,6 @@
+# Usage: samdev package [OPTIONS] [ARGS]...
+# Options:
+#   --debug  Turn on debug logging
+#   --help   Show this message and exit.
+
+sam package --template-file template.yaml --s3-bucket YOUR_S3_BUCKET --profile AWS_CLI_PROFILE > build.output.yaml

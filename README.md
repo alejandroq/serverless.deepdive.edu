@@ -260,8 +260,14 @@ You can host the API in a local Docker container pictured below:
 
 *Note: be sure to include path such as `/hello` at end of `127.0.0.1:PORT` or else you will get an anonymous `403`*
 
+If you require advanced local networking between services, you can declare your API into specific Docker networks.
+
 ### `validate`
 
+```sh
+$ sam validate
+template.yaml is a valid SAM Template
+```
 
 ## Serverless Application Model CLI (SAM)
 

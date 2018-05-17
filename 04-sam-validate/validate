@@ -1,0 +1,8 @@
+# Usage: samdev validate [OPTIONS]
+# 
+# Options:
+#   -t, --template PATH  AWS SAM template file  [default: template.[yaml|yml]]
+#   --debug              Turn on debug logging
+#   --help               Show this message and exit.
+
+sam validate -t helloworld-go/template.yaml
