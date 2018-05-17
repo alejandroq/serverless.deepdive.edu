@@ -3,6 +3,7 @@
 
 - [An Introduction to Serverless Applications](#an-introduction-to-serverless-applications)
     - [Goal](#goal)
+    - [Requirements](#requirements)
     - [Agenda](#agenda)
     - [What is FaaS?](#what-is-faas)
     - [Why use FaaS?](#why-use-faas)
@@ -12,6 +13,7 @@
     - [SAM Commands](#sam-commands)
         - [`init`](#init)
         - [`package`](#package)
+        - [`local`](#local)
         - [`validate`](#validate)
     - [Serverless Application Model CLI (SAM)](#serverless-application-model-cli-sam)
     - [Putting it Together](#putting-it-together)
@@ -26,6 +28,14 @@ Demonstrate high value per unit effort inherent to serverless applications as it
 - enough automation to make Tesla jealous
 
 We will accomplish the aforementioned via the classic "Hello World" and "Todo List" applications.
+
+## Requirements
+- Basic AWS Knowledge
+- Basic Cloud Knowledge
+- Understand the concept of servers
+- Tool: Docker [https://www.docker.com/](https://www.docker.com/)
+- Tool: awscli [https://aws.amazon.com/cli/](https://aws.amazon.com/cli/)
+- Tool: sam [https://github.com/awslabs/serverless-application-model](https://github.com/awslabs/serverless-application-model)
 
 ## Agenda
 - What is FaaS?
@@ -211,6 +221,44 @@ HelloWorldFunction:
 ```
 
 Point CodeUri to your codes .zip in your template.yaml. Provide an S3 location in the CLI and get a CF document with the .zip packaged, sent to S3 and then CodeUri replaced with its actual S3 URL. 
+
+### `local`
+
+Host your API in a Docker container locally, invoke an event by passing in JSON or generate an Event JSON from the following events: 
+
+```txt
+Commands:
+  api       Generates a sample Amazon API Gateway event
+  dynamodb  Generates a sample Amazon DynamoDB event
+  kinesis   Generates a sample Amazon Kinesis event
+  s3        Generates a sample Amazon S3 event
+  schedule  Generates a sample scheduled event
+  sns       Generates a sample Amazon SNS event
+```
+
+An example of event generation and then a test invokation: 
+
+```txt
+(samcli27) ➜  03-sam-local git:(master) ✗ samdev local generate-event api > request.json
+(samcli27) ➜  03-sam-local git:(master) ✗ samdev local invoke -t helloworld-go/template.yaml -e request.json
+2018-05-17 08:34:40 Invoking hello-world (go1.x)
+2018-05-17 08:34:40 Starting new HTTP connection (1): 169.254.169.254
+
+Fetching lambci/lambda:go1.x Docker container image......
+2018-05-17 08:34:42 Mounting /Users/37860/go/src/serverless.deepdive.edu/03-sam-local/helloworld-go/hello-world as /var/task:ro inside runtime container
+START RequestId: 73404a9b-0b03-1cb4-e466-7dafa04ce609 Version: $LATEST
+{"statusCode":200,"headers":null,"body":"Hello, 199.223.30.254\n"}
+END RequestId: 73404a9b-0b03-1cb4-e466-7dafa04ce609
+REPORT RequestId: 73404a9b-0b03-1cb4-e466-7dafa04ce609  Duration: 201.28 ms     Billed Duration: 300 ms Memory Size: 128 MB       Max Memory Used: 10 MB
+```
+
+Take note of the 'Max Memory Used', 'Memory Size' and 'Duration' as they all relate to billing in the Cloud.
+
+You can host the API in a local Docker container pictured below: 
+
+![Screenshot](./images/03-sam-local.png)
+
+*Note: be sure to include path such as `/hello` at end of `127.0.0.1:PORT` or else you will get an anonymous `403`*
 
 ### `validate`
 

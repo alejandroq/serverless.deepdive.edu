@@ -29,4 +29,8 @@ samdev init -r nodejs8.10  -n helloworld-nodejs
 samdev init -r python3.6  -n helloworld-python
 samdev init -r java8  -n helloworld-java
 samdev init -r go -n helloworld-go
-sam init -r dotnet -n helloworld-cs
+samdev init -r dotnet -n helloworld-cs
+
+# local start-api
+cd 03-sam-local 
+samdev local start-api -t helloworld-go/template.yaml

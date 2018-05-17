@@ -11,3 +11,7 @@
 #   start-api       Runs your APIs locally
 
 sam local start-api -t helloworld-go/template.yaml
+
+sam local generate-event api > request.json
+
+sam local invoke -t helloworld-go/template.yaml -e request.json

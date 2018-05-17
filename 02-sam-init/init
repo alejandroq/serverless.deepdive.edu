@@ -1,0 +1,52 @@
+# Usage: sam init [OPTIONS]
+# 
+#       Initialize a serverless application with a SAM template, folder
+#       structure for your Lambda functions, connected to an event source such as APIs,
+#       S3 Buckets or DynamoDB Tables. This application includes everything you need to      get started with serverless and eventually grow into a production scale application.
+# 
+#       This command can initialize a boilerplate serverless app. If you want to create your own
+#       template as well as use a custom location please take a look at our official documentation.
+# 
+#   Common usage:
+#           Initializes a new SAM project using Python 3.6 default template runtime
+# 
+#           $ sam init --runtime python3.6
+#           Initializes a new SAM project using custom template in a Git/Mercurial repository
+# 
+#           # gh being expanded to github url
+#           $ sam init --location gh:aws-samples/cookiecutter-sam-python
+# 
+#           $ sam init --location git+ssh://git@github.com/aws-samples/cookiecutter-sam-python.git
+# 
+#           $ sam init --location hg+ssh://hg@bitbucket.org/repo/template-name
+# 
+#           $ sam init --location hg+ssh://hg@bitbucket.org/repo/template-name
+# 
+#           Initializes a new SAM project using custom template in a Zipfile
+# 
+#           $ sam init --location /path/to/template.zip
+# 
+#           $ sam init --location https://example.com/path/to/template.zip
+# 
+#           Initializes a new SAM project using custom template in a local path
+# 
+#           $ sam init --location /path/to/template/folder
+# 
+# Options:
+#   -l, --location TEXT             Template location (git, mercurial, http(s),
+#                                   zip, path)
+#   -r, --runtime [python3.6|python2.7|python|nodejs6.10|nodejs8.10|nodejs4.3|nodejs|dotnetcore2.0|dotnetcore1.0|dotnetcore|dotnet|go1.x|go|java8|java]
+#                                   Lambda Runtime of your app
+#   -o, --output-dir PATH           Where to output the initialized app into
+#   -n, --name TEXT                 Name of your project to be generated as a
+#                                   folder
+#   --no-input                      Disable prompting and accept default values
+#                                   defined template config
+#   --debug                         Turn on debug logging
+#   -h, --help                      Show this message and exit.
+
+sam init -r nodejs8.10  -n helloworld-nodejs
+sam init -r python3.6  -n helloworld-python
+sam init -r java8  -n helloworld-java
+sam init -r go -n helloworld-go
+sam init -r dotnet -n helloworld-cs
