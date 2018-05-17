@@ -18,11 +18,6 @@
         - [`local`](#local)
         - [`deploy`](#deploy)
     - [Putting it all Together from SAM Itself](#putting-it-all-together-from-sam-itself)
-    - [APP: Hello World(s) APIs](#app--hello-worlds-apis)
-    - [APP: Todo List PWA / API](#app--todo-list-pwa---api)
-    - [The Definitive Maxim of 05/17/18](#the-definitive-maxim-of-05-17-18)
-    - [Other Notable Serverless Options](#other-notable-serverless-options)
-    - [Resources](#resources)
 
 ## Goal
 Demonstrate a high value per unit effort inherent to serverless applications as it pertains to:
@@ -279,7 +274,7 @@ Successfully created/updated stack - helloworld
 
 The following instructions come from a SAM `init`ted function boilerplate's README.md:
 
->   ```bash
+```txt
     aws s3 mb s3://BUCKET_NAME
     ```
 
@@ -336,6 +331,11 @@ Known complications:
 - SAM CLI is rather new, so there are a few issues. For this presentation I used a version built from source (see `HISTORY` for commands)
 - Debugging and logging serverless is still peculiar (but getting better). Handled via CloudWatch and X-Ray in production. Locally a command can be passed to `sam local [OPTION]` to run your function in a Docker container that is open to popular debugging tools for the respective techonology in play.
 - Testing DynamoDB locally is challenging and not very representative of the actual production DynamoDB
+
+## Pricing
+under construction
+## Security
+under construction
 
 ## The Definitive Maxim of 05/17/18
 
