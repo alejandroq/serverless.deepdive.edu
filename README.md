@@ -367,7 +367,7 @@ I recommend you look up Pub/Sub models. Nothing new, but really incredible and f
 - DynamoDB
     - NoSQL Document DB
     - An older product and therefore has the strangest pricing 
-    - Is very good and trusted for incredible workloads in the wild
+    - Trusted with incredible workloads in the wild
 - IoT (just really cool)
 - Greengrass (still really cool)
 - A lot more and probably more as of this reading
