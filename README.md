@@ -338,7 +338,8 @@ Known complications:
 - Testing DynamoDB locally is challenging and not very representative of the actual production DynamoDB
 
 ## Pricing
-under construction
+
+In-lieu of writing extensive on the topic (as there are many articles that go into detail - I am attaching the below screens)
 
 Lambda (note: API Gateway not included in this)
 ![Screenshot](./images/xx-price-2.png)
